@@ -195,6 +195,8 @@ class MultiPlayer(TicTacToe):
         super().__init__()
         self.in_game = True
         self.is_player_won = False
+        self.is_draw = False
+        
         self.player = {
             'name': user,
             'room': room_id,
@@ -255,12 +257,18 @@ class MultiPlayer(TicTacToe):
                         self.opp_score.update(str(self.opponent['score']))
                     self.moves.clear()
                     self.in_game = False
+                elif data['type'] == 'is_tie':
+                    self.is_draw = True
+                    self.moves.clear()
 
     def multiplayer_won(self, msg):
         won_bg = pygame.image.load('core/assests/Won.png')
         restart = pygame.Rect(155, 195, 290, 78)
         close = pygame.Rect(202, 398, 195, 75)
-        msg = Text(self.root, msg, (170, 25))
+        if 'Tie' in msg:
+            msg = Text(self.root, msg, (230, 25))
+        else:
+            msg = Text(self.root, msg, (170, 25))
         msg.active = True
 
         has_won = True
@@ -276,6 +284,7 @@ class MultiPlayer(TicTacToe):
                     if restart.collidepoint(event.pos):
                         has_won = False
                         self.in_game = True
+                        self.is_draw = False if self.is_draw else False
                         self.create_instance()
                     elif close.collidepoint(event.pos):
                         has_won = False
@@ -314,6 +323,7 @@ class MultiPlayer(TicTacToe):
                 if self.is_player_won:
                     self.multiplayer_won('Hooray! you won!')
                 else: self.multiplayer_won('Oops! you lost!')
+            if self.is_draw: self.multiplayer_won("It's a Tie!")
             
             pygame.display.flip()
             self.fps_clock.tick(20)
