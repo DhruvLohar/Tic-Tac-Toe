@@ -14,6 +14,10 @@ def is_winner(layout, current):
             return True
     return False
 
+def is_tie(layout):
+    common = list(set([alias for sublist in layout for alias in sublist]))
+    return True if ('X' or 'O') and not '-' in common else False
+
 def get_location(pos):
     x, y = pos
     if 0 < x < 200 and 100 < y < 300:
