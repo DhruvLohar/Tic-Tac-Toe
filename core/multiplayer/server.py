@@ -4,7 +4,7 @@ import string
 import json
 from random import choices
 from socket import AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
-from core import get_location, is_winner
+from core import get_location, is_winner, is_tie
 
 class Server:
     def __init__(self, host, port):
@@ -64,6 +64,9 @@ class Server:
                         if is_winner(self.layout, self.current):
                             self.room_boardcast(data['room_id'], 'has_won', self.current)
                             self.layout = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
+                        elif is_tie(self.layout):
+                            self.room_boardcast(data['room_id'], 'is_tie')
+                            self.layout = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]
                         else:
                             self.current = 'O' if self.current == 'X' else 'X'
 
@@ -90,6 +93,10 @@ class Server:
                 conn.send(json.dumps({
                     'type': 'has_won',
                     'winner': data_to_emit
+                }).encode())
+            elif boardcast_type == 'is_tie':
+                conn.send(json.dumps({
+                    'type': 'is_tie'
                 }).encode())
     
     def init_server(self):
