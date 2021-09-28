@@ -1,6 +1,6 @@
-# Tic-Tac-Toe
+# Tic-Multi-Toe
 
-Simple Tic Tac Toe made using python and Frontend desgined in Figma
+Multiplayer Tic Tac Toe made using python and Frontend desgined in Figma
 
 Packages Used:
   - pygame
